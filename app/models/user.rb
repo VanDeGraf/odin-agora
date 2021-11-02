@@ -7,4 +7,5 @@ class User < ApplicationRecord
                           class_name: 'Post',
                           join_table: 'likes',
                           foreign_key: 'user_id'
+  has_many :comments, class_name: 'Comment', foreign_key: 'author_id', inverse_of: :author
 end

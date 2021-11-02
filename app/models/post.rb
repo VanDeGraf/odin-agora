@@ -4,4 +4,5 @@ class Post < ApplicationRecord
                           class_name: 'User',
                           join_table: 'likes',
                           foreign_key: 'post_id'
+  has_many :comments
 end
