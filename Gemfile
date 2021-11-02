@@ -51,6 +51,12 @@ group :development do
   gem 'spring'
 
   gem 'letter_opener'
+  gem 'rubocop'
+  gem 'rubocop-rspec'
+  gem 'guard'
+  gem 'guard-rspec', require: false
+  gem 'guard-livereload'
+  gem 'guard-rails'
 end
 
 group :test do
