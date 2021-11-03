@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_02_234927) do
+ActiveRecord::Schema.define(version: 2021_11_03_034049) do
 
   create_table "comments", force: :cascade do |t|
     t.string "body", default: "", null: false
@@ -37,6 +37,16 @@ ActiveRecord::Schema.define(version: 2021_11_02_234927) do
   create_table "likes", id: false, force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "post_id", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "body", default: "", null: false
+    t.integer "sender_id"
+    t.integer "recipient_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["recipient_id"], name: "index_messages_on_recipient_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -78,5 +88,7 @@ ActiveRecord::Schema.define(version: 2021_11_02_234927) do
 
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users", column: "author_id"
+  add_foreign_key "messages", "users", column: "recipient_id"
+  add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "posts", "users", column: "author_id"
 end

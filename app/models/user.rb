@@ -18,6 +18,8 @@ class User < ApplicationRecord
              SQL
              User.joins(join_statement).unscope(:where).where.not(id: user.id)
            }, class_name: 'User'
+  has_many :sent_messages, class_name: 'Message', foreign_key: :sender_id, inverse_of: :sender
+  has_many :received_messages, class_name: 'Message', foreign_key: :recipient_id, inverse_of: :recipient
   # called other users to your friend list
   has_many :friend_invites,
            lambda { |user|
