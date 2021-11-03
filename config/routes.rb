@@ -8,4 +8,7 @@ Rails.application.routes.draw do
   get "/people", to: "static_pages#people"
   get "/feed", to: "static_pages#feed"
   get "/about", to: "static_pages#about"
+
+  resources :posts, only: [:new, :create, :show]
+  post "/posts/:id/create_comment", to: "posts#create_comment"
 end
