@@ -11,4 +11,8 @@ Rails.application.routes.draw do
 
   resources :posts, only: [:new, :create, :show]
   post "/posts/:id/create_comment", to: "posts#create_comment"
+
+  get "/dialogs/", to: "dialogs#index"
+  get "/dialogs/:recipient_id", to: "dialogs#show"
+  post "/dialogs/create_message", to: "dialogs#create_message"
 end
