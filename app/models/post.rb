@@ -5,4 +5,9 @@ class Post < ApplicationRecord
                           join_table: 'likes',
                           foreign_key: 'post_id'
   has_many :comments
+
+  # @param user [User]
+  def liked?(user)
+    like_ids.include?(user.id)
+  end
 end

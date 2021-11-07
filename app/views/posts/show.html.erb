@@ -1,1 +1,20 @@
-post view
+<h1>Post</h1>
+title: <%= @post.title %><br>
+body: <%= @post.body %><br>
+author email: <%= @post.author.email %>, <%= link_to 'profile', user_path(@post.author) %><br>
+created_at: <%= @post.created_at %><br>
+
+likes: <%= @post.likes.count %>
+<% if @post.author_id != current_user.id %>
+  <%= link_to @post.liked?(current_user) ? 'unlike' : 'like', '404.html' %>
+<% end %>
+<br>
+
+<h3>Comments:</h3>
+<% @post.comments.sort_by(&:created_at).reverse.each do |c| %>
+  <div class="container border border-secondary">
+    author email: <%= c.author.email %>, <%= link_to 'profile', user_path(c.author) %><br>
+    body: <%= c.body %><br>
+    created_at: <%= c.created_at %><br>
+  </div>
+<% end %>

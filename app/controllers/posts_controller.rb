@@ -1,5 +1,8 @@
 class PostsController < ApplicationController
-  def show; end
+  def show
+    # @type [Post]
+    @post = Post.includes(:author, :likes, comments: [:author]).find(params[:id])
+  end
 
   def new; end
 
