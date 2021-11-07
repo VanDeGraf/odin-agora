@@ -1,0 +1,9 @@
+<ul>
+  <li><%= link_to "Profile", user_path(current_user) %></li>
+  <li><%= link_to "Feed", feed_path %></li>
+  <li><%= link_to "Create Post", new_post_path %></li>
+  <li><%= link_to "Friends", friends_path(current_user) %></li>
+  <li><%= link_to "People", people_path %></li>
+  <li><%= link_to "Messages", dialogs_path %></li>
+  <li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>
+</ul>
