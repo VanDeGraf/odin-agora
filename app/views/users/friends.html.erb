@@ -1,1 +1,43 @@
-friends view
+<h1>Friends</h1>
+<% @user.friends.find_each do |friend| %>
+  <div class="container">
+    <%= friend.id %>,
+    <% if friend.id == current_user.id %>
+      <%= link_to "delete me", delete_friend_path(@user) %>
+    <% else %>
+      <%= link_to "profile", user_path(friend) %>,
+      <% if friend.friendship_status(current_user) == :friend %>
+        <%= link_to "delete friend", delete_friend_path(friend) %>
+      <% elsif friend.friendship_status(current_user) == :invited %>
+        <%= link_to "accept", accept_friend_request_path(friend) %>\
+        <%= link_to "decline", decline_friend_request_path(friend) %> friend request
+      <% elsif friend.friendship_status(current_user) == :requested %>
+        <%= link_to "cancel friend invite", cancel_friend_invite_path(friend) %>
+      <% else %>
+        <%= link_to "invite friend", invite_friend_path(friend) %>
+      <% end %>
+    <% end %>
+    <br>
+  </div>
+<% end %>
+<% if @user.id == current_user.id %>
+  <h2>Invites:</h2>
+  <% @user.friend_invites.find_each do |friend| %>
+    <div class="container">
+      <%= friend.id %>,
+      <%= link_to "profile", user_path(friend) %>,
+      <%= link_to "cancel friend invite", cancel_friend_invite_path(friend) %>
+      <br>
+    </div>
+  <% end %>
+  <h2>Requests:</h2>
+  <% @user.friend_requests.find_each do |friend| %>
+    <div class="container">
+      <%= friend.id %>,
+      <%= link_to "profile", user_path(friend) %>,
+      <%= link_to "accept", accept_friend_request_path(friend) %>\
+      <%= link_to "decline", decline_friend_request_path(friend) %> friend request
+      <br>
+    </div>
+  <% end %>
+<% end %>

@@ -81,6 +81,15 @@ class User < ApplicationRecord
 
   alias cancel_friend_invite delete_friend
 
+  # @param user [User]
+  def friendship_status(user)
+    return :friend if friend_ids.include?(user.id)
+    return :invited if friend_invite_ids.include?(user.id)
+    return :requested if friend_request_ids.include?(user.id)
+
+    nil
+  end
+
   private
 
   # @param friend [User, Integer]
@@ -89,6 +98,8 @@ class User < ApplicationRecord
     return false unless friend.is_a?(User) || friend.is_a?(Integer)
 
     friend_id = friend.is_a?(User) ? friend.id : friend
+    return if !id.nil? && friend_id == id
+
     sql = yield friend_id
     # @type [ActiveRecord::Result]
     result = ActiveRecord::Base.connection.exec_query(sql)

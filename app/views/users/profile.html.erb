@@ -1,1 +1,33 @@
-profile view
+<h1>Profile</h1>
+avatar_url: <%= @user.avatar_url %><br>
+email: <%= @user.email %><br>
+birthday: <%= @user.birthday %><br>
+first_name: <%= @user.first_name %><br>
+last_name: <%= @user.last_name %><br>
+sex: <%= @user.sex %><br>
+last_sign_in_at: <%= @user.last_sign_in_at %><br>
+<%= link_to "friends", friends_path(@user) %><br>
+<% if current_user.id == @user.id %>
+  <%= link_to "edit profile", edit_user_registration_path %><br>
+<% else %>
+  <% if @user.friendship_status(current_user) == :friend %>
+    <%= link_to "delete friend", delete_friend_path(@user) %><br>
+  <% elsif @user.friendship_status(current_user) == :invited %>
+    <%= link_to "accept", accept_friend_request_path(@user) %>\
+    <%= link_to "decline", decline_friend_request_path(@user) %> friend request<br>
+  <% elsif @user.friendship_status(current_user) == :requested %>
+    <%= link_to "cancel friend invite", cancel_friend_invite_path(@user) %><br>
+  <% else %>
+    <%= link_to "invite friend", invite_friend_path(@user) %><br>
+  <% end %>
+  <%= link_to "send message", dialog_path(@user) %><br>
+<% end %>
+<h3>Posts:</h3>
+<% @user.posts.sort_by(&:created_at).reverse.each do |p| %>
+  <div class="container">
+    title: <%= p.title %><br>
+    body: <%= p.body %><br>
+    created_at: <%= p.created_at %><br>
+    <%= link_to "show post", post_path(p) %><br>
+  </div>
+<% end %>
