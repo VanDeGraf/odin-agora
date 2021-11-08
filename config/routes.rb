@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root to: "static_pages#feed"
 
-  devise_for :users
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   get "/users/:id", to: "users#profile", as: "user"
   get "/users/:id/friends", to: "users#friends", as: "friends"
 
