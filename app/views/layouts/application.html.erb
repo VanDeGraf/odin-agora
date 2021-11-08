@@ -16,9 +16,21 @@
     <%= render 'static_pages/menu' %>
   </div>
   <div>
+    <% flash.each do |type, msg| %>
+      <% type = type == 'alert' ? 'warning' : 'success' %>
+      <div class="alert alert-<%= type %>">
+        <%= msg %>
+      </div>
+    <% end %>
     <%= yield %>
   </div>
 <% else %>
+  <% flash.each do |type, msg| %>
+    <% type = type == 'alert' ? 'warning' : 'success' %>
+    <div class="alert alert-<%= type %>">
+      <%= msg %>
+    </div>
+  <% end %>
   <%= yield %>
 <% end %>
 </body>
