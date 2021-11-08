@@ -4,6 +4,15 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
+    <%= f.input :first_name, required: false %>
+    <%= f.input :last_name, required: false %>
+    <%= f.input :sex, required: false, as: :radio_buttons,
+                collection: [%w[1 female], %w[2 male]], label_method: :second, value_method: :first %>
+    <%= f.input :birthday, required: false, default: nil %>
+    <%= f.input :avatar_url, required: false, as: :url %>
+  </div>
+
+  <div class="form-inputs">
     <%= f.input :email, required: true, autofocus: true %>
 
     <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
