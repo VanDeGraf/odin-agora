@@ -1,1 +1,24 @@
-show dialog
+<h1>Dialog with UserID:<%= @interlocutor.id %></h1>
+<% @messages.each do |m| %>
+  <div class="container p-1 border border-secondary">
+    <% if m.sender_id == current_user.id %>
+      <h6>You</h6>
+    <% else %>
+      <h6>UserID:<%= @interlocutor.id %></h6>
+    <% end %>
+    <p><%= m.body %></p>
+    <small><%= m.created_at %></small>
+  </div>
+<% end %>
+<div class="container">
+  <%= simple_form_for @message, url: create_message_path(@interlocutor) do |f| %>
+    <div class="form-inputs">
+      <%= f.input :body,
+                  required: true,
+                  as: :text %>
+    </div>
+    <div class="form-actions">
+      <%= f.button :submit, "Send" %>
+    </div>
+  <% end %>
+</div>

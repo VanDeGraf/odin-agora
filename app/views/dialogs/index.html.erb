@@ -1,1 +1,7 @@
-index of all dialogs
+<h1>Dialogs</h1>
+<% @interlocutors.each do |user| %>
+  <div class="container">
+    UserID: <%= user.id %><br>
+    <%= link_to 'chat', dialog_path(user.id) %><br><br>
+  </div>
+<% end %>

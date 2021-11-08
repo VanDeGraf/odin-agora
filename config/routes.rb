@@ -20,5 +20,5 @@ Rails.application.routes.draw do
 
   get "/dialogs/", to: "dialogs#index"
   get "/dialogs/:id", to: "dialogs#show", as: "dialog"
-  post "/dialogs/create_message", to: "dialogs#create_message"
+  post "/dialogs/:id/create_message", to: "dialogs#create_message", as: "create_message"
 end

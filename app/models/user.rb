@@ -20,6 +20,34 @@ class User < ApplicationRecord
            }, class_name: 'User'
   has_many :sent_messages, class_name: 'Message', foreign_key: :sender_id, inverse_of: :sender
   has_many :received_messages, class_name: 'Message', foreign_key: :recipient_id, inverse_of: :recipient
+
+  # @return [ActiveRecord::Relation]
+  def interlocutors
+    join_statement = <<~SQL
+      INNER JOIN users ON
+            users.id = messages.recipient_id OR users.id = messages.sender_id
+    SQL
+    where_statement = <<~SQL
+      (messages.recipient_id = #{id} OR messages.sender_id = #{id})
+        AND users.id <> #{id}
+    SQL
+    User.reselect('users.*').from('messages').joins(join_statement).unscope(:where).where(where_statement)
+        .group('users.id').order('messages.created_at DESC')
+  end
+
+  # @param interlocutor_id [Integer] - user id
+  def dialog_messages(interlocutor_id)
+    join_statement = <<~SQL
+      INNER JOIN users ON
+            users.id = messages.recipient_id OR users.id = messages.sender_id
+    SQL
+    where_statement = <<~SQL
+        (messages.recipient_id = #{id} AND messages.sender_id = #{interlocutor_id})
+      OR (messages.sender_id = #{id} AND messages.recipient_id = #{interlocutor_id})
+    SQL
+    Message.distinct.joins(join_statement).unscope(:where).where(where_statement).order('messages.created_at')
+  end
+
   # called other users to your friend list
   has_many :friend_invites,
            lambda { |user|
