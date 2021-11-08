@@ -94,6 +94,8 @@ GEM
       http_parser.rb (~> 0.6.0)
     erubi (1.10.0)
     eventmachine (1.2.7)
+    faker (2.19.0)
+      i18n (>= 1.6, < 2)
     faraday (1.8.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -343,6 +345,7 @@ DEPENDENCIES
   byebug
   capybara (>= 3.26)
   devise
+  faker
   figaro
   guard
   guard-livereload
