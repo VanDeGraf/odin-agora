@@ -18,3 +18,16 @@ likes: <%= @post.likes.count %>
     created_at: <%= c.created_at %><br>
   </div>
 <% end %>
+<h5>Add comment</h5>
+<div class="container">
+  <%= simple_form_for @comment, url: create_comment_path(@post) do |f| %>
+    <div class="form-inputs">
+      <%= f.input :body,
+                  required: true,
+                  as: :text %>
+    </div>
+    <div class="form-actions">
+      <%= f.button :submit, "Comment" %>
+    </div>
+  <% end %>
+</div>

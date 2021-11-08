@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   get "/about", to: "static_pages#about"
 
   resources :posts, only: [:new, :create, :show]
-  post "/posts/:id/create_comment", to: "posts#create_comment"
+  post "/posts/:id/create_comment", to: "posts#create_comment", as: "create_comment"
 
   get "/dialogs/", to: "dialogs#index"
   get "/dialogs/:id", to: "dialogs#show", as: "dialog"
