@@ -18,7 +18,7 @@ class StaticPagesController < ApplicationController
 
   def feed
     posts = Post.distinct.includes(:author).joins(friends_children_join('posts')).order('created_at DESC')
-    comments = Comment.distinct.includes(:author).joins(friends_children_join('comments')).order('created_at DESC')
+    comments = Comment.distinct.includes(:author, :post).joins(friends_children_join('comments')).order('created_at DESC')
     # @type [Array<Post,Comment>]
     @feed = (posts + comments).sort_by!(&:created_at).reverse
   end

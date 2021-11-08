@@ -6,13 +6,13 @@
       <%= link_to "delete me", delete_friend_path(@user) %>
     <% else %>
       <%= link_to "profile", user_path(friend) %>,
-      <% if friend.friendship_status(current_user) == :friend %>
+      <% if current_user.friendship_status(friend) == :friend %>
         <%= link_to "delete friend", delete_friend_path(friend) %>
-      <% elsif friend.friendship_status(current_user) == :invited %>
+      <% elsif current_user.friendship_status(friend) == :invited %>
+        <%= link_to "cancel friend invite", cancel_friend_invite_path(friend) %>
+      <% elsif current_user.friendship_status(friend) == :requested %>
         <%= link_to "accept", accept_friend_request_path(friend) %>\
         <%= link_to "decline", decline_friend_request_path(friend) %> friend request
-      <% elsif friend.friendship_status(current_user) == :requested %>
-        <%= link_to "cancel friend invite", cancel_friend_invite_path(friend) %>
       <% else %>
         <%= link_to "invite friend", invite_friend_path(friend) %>
       <% end %>
