@@ -1,10 +1,10 @@
-<h1>Profile</h1>
+<h1>Profile <%= @user.representative_name %></h1>
 avatar_url: <%= @user.avatar_url %><br>
 email: <%= @user.email %><br>
 birthday: <%= @user.birthday %><br>
 first_name: <%= @user.first_name %><br>
 last_name: <%= @user.last_name %><br>
-sex: <%= @user.sex %><br>
+sex: <%= @user.sex_name %><br>
 last_sign_in_at: <%= @user.last_sign_in_at %><br>
 <%= link_to "friends", friends_path(@user) %><br>
 <% if current_user.id == @user.id %>

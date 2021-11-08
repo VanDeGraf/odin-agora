@@ -118,6 +118,24 @@ class User < ApplicationRecord
     nil
   end
 
+  def sex_name
+    case sex
+    when 1
+      'female'
+    when 2
+      'male'
+    else
+      ''
+    end
+  end
+
+  def representative_name
+    name = "#{first_name} #{last_name}"
+    name = email if name.length <= 1
+
+    name.chomp
+  end
+
   private
 
   # @param friend [User, Integer]
