@@ -8,8 +8,4 @@ class ApplicationController < ActionController::Base
   def current_user
     super
   end
-
-  def authenticate_user!
-    super
-  end
 end
