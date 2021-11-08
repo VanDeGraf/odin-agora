@@ -142,7 +142,21 @@ class User < ApplicationRecord
       user.uid = auth.uid
       user.email = auth.info.email
       user.confirmed_at = DateTime.now.prev_day
-      # user.password = Devise.friendly_token[0, 20]
+      user.password = Devise.friendly_token[0, 20]
+      user.birthday = Date.parse(auth.extra.raw_info.birthday) unless auth.extra.raw_info.birthday.nil?
+      user.first_name = auth.extra.raw_info.first_name
+      user.last_name = auth.extra.raw_info.last_name
+      user.sex = case auth.extra.raw_info.sex
+                 when 'male'
+                   2
+                 when 'female'
+                   1
+                 else
+                   0
+                 end
+      unless auth.extra.raw_info.is_avatar_empty
+        user.avatar_url = "https://avatars.yandex.net/get-yapic/#{auth.extra.raw_info.default_avatar_id}/islands-middle"
+      end
     end
   end
 
