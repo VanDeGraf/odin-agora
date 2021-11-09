@@ -59,6 +59,26 @@ ActiveRecord::Base.transaction do
   end
 end
 
+puts "\tCreate post likes..."
+
+def set_like(user_id, post_id)
+  sql = <<~SQL
+    INSERT INTO likes
+    VALUES (#{user_id}, #{post_id})
+  SQL
+  ActiveRecord::Base.connection.exec_query(sql)
+end
+
+ActiveRecord::Base.transaction do
+  post_ids.each do |post_id|
+    user_ids.reverse.first(20).each do |user_id|
+      next if Faker::Boolean.boolean
+
+      set_like(user_id, post_id)
+    end
+  end
+end
+
 puts "\tCreate comments..."
 comment_ids = []
 ActiveRecord::Base.transaction do
