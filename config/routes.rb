@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   resources :posts, only: [:new, :create, :show]
   post "/posts/:id/create_comment", to: "posts#create_comment", as: "create_comment"
+  get "/posts/:id/toggle_like", to: "posts#toggle_like", as: "toggle_like"
 
   get "/dialogs/", to: "dialogs#index"
   get "/dialogs/:id", to: "dialogs#show", as: "dialog"

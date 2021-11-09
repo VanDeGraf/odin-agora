@@ -10,4 +10,15 @@ class Post < ApplicationRecord
   def liked?(user)
     like_ids.include?(user.id)
   end
+
+  # @param user [User]
+  def toggle_like(user)
+    return if user.id == author_id
+
+    if liked?(user)
+      likes.delete(user)
+    else
+      likes << user
+    end
+  end
 end

@@ -22,4 +22,11 @@ class PostsController < ApplicationController
     flash[:notice] = 'Successfully add comment'
     redirect_to @comment.post
   end
+
+  def toggle_like
+    @post = Post.find(params[:id])
+    @post.toggle_like(current_user)
+    @post.save
+    redirect_back fallback_location: post_path(@post)
+  end
 end
