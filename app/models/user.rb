@@ -2,12 +2,15 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, :confirmable, :trackable
-  has_many :posts, class_name: 'Post', foreign_key: 'author_id', inverse_of: :author
+  before_destroy do
+    destroy_all_friendship
+  end
+  has_many :posts, class_name: 'Post', foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
   has_and_belongs_to_many :liked,
                           class_name: 'Post',
                           join_table: 'likes',
                           foreign_key: 'user_id'
-  has_many :comments, class_name: 'Comment', foreign_key: 'author_id', inverse_of: :author
+  has_many :comments, class_name: 'Comment', foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
   has_many :friends,
            lambda { |user|
              join_statement = <<~SQL
@@ -18,8 +21,10 @@ class User < ApplicationRecord
              SQL
              User.joins(join_statement).unscope(:where).where.not(id: user.id)
            }, class_name: 'User'
-  has_many :sent_messages, class_name: 'Message', foreign_key: :sender_id, inverse_of: :sender
-  has_many :received_messages, class_name: 'Message', foreign_key: :recipient_id, inverse_of: :recipient
+  has_many :sent_messages, class_name: 'Message', foreign_key: :sender_id,
+                           inverse_of: :sender, dependent: :destroy
+  has_many :received_messages, class_name: 'Message', foreign_key: :recipient_id,
+                               inverse_of: :recipient, dependent: :destroy
 
   # @return [ActiveRecord::Relation]
   def interlocutors
@@ -174,5 +179,13 @@ class User < ApplicationRecord
     # @type [ActiveRecord::Result]
     result = ActiveRecord::Base.connection.exec_query(sql)
     result.rows == 1
+  end
+
+  def destroy_all_friendship
+    sql = <<~SQL
+      DELETE FROM friends
+      WHERE friend_id = #{id} OR other_friend_id = #{id}
+    SQL
+    ActiveRecord::Base.connection.exec_query(sql)
   end
 end
