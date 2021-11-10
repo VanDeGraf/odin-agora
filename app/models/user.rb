@@ -38,7 +38,7 @@ class User < ApplicationRecord
         AND users.id <> #{id}
     SQL
     User.reselect('users.*').from('messages').joins(join_statement).unscope(:where).where(where_statement)
-        .group('users.id').order('messages.created_at DESC')
+        .group('users.id').sort_by(&:created_at).reverse
   end
 
   # @param interlocutor_id [Integer] - user id
