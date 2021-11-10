@@ -1,17 +1,9 @@
-<h1>Feed</h1>
-<% @feed.each do |feed_item| %>
-  <div class="container">
-    <h3><%= feed_item.class %> number <%= feed_item.id %></h3>
+<% unless @feed.empty? %>
+  <% @feed.each do |feed_item| %>
     <% if feed_item.is_a?(Post) %>
-      title: <%= feed_item.title %><br>
-      body: <%= feed_item.body %><br>
-      <%= link_to "show post", post_path(feed_item) %><br>
+      <%= render "posts/post", post: feed_item, show_author: true %>
     <% elsif feed_item.is_a?(Comment) %>
-      body: <%= feed_item.body %><br>
-      <%= link_to "show post", post_path(feed_item.post) %><br>
+      <%= render "posts/comment", comment: feed_item, show_parent: true %>
     <% end %>
-    created_at: <%= feed_item.created_at %><br>
-    author email: <%= feed_item.author.email %><br>
-    <%= link_to "show author", user_path(feed_item.author) %>
-  </div>
+  <% end %>
 <% end %>
