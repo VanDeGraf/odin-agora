@@ -1,0 +1,24 @@
+<div class="container bg-light rounded shadow-sm py-2 my-2">
+  <% if show_parent %>
+    <a href="<%= post_url(comment.post) %>" style="text-decoration: none;color: var(--bs-body-color);">
+      <h4><%= comment.post.title %></h4>
+    </a>
+    <hr>
+  <% end %>
+  <div class="user-container">
+    <a href="<%= user_url(comment.author) %>" class="circle">
+      <%= image_tag comment.author.avatar if comment.author.avatar.attached? %>
+    </a>
+    <div class="mx-3">
+      <div style="font-weight: 600; margin-bottom: 0.3rem;">
+        <a href="<%= user_url(comment.author) %>"><%= comment.author.representative_name %></a>
+      </div>
+      <div>
+        <%= comment.body %>
+      </div>
+      <div class="text-secondary mt-2" style="font-size: 10px; font-weight: bold;">
+        <%= comment.created_at.strftime("%H:%M %d-%m-%Y") %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<div class="post-container">
+  <%= render "posts/post_body", post: post %>
+  <% if show_author %>
+    <hr>
+    <%= render "users/user", user: post.author %>
+  <% end %>
+  <hr>
+  <%= render "posts/post_icons", post: post %>
+</div>

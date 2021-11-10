@@ -1,0 +1,7 @@
+<h3><%= post.title %></h3>
+<div class="d-flex">
+  <div>
+    <%= post.body %>
+  </div>
+  <%= image_tag post.picture if post.picture.attached? %>
+</div>

@@ -1,0 +1,28 @@
+<div class="icons">
+  <div>
+    <a href="<%= post_path(post) %>">
+      <img src="/image/chat-dots.svg" alt=""/>
+    </a>
+    <%= post.comments.count %>
+  </div>
+  <div>
+    <% if post.author_id == current_user.id %>
+      <img src="/image/heart.svg" alt=""/>
+    <% else %>
+      <% if post.liked?(current_user) %>
+        <a href="<%= toggle_like_url(post) %>">
+          <img src="/image/heart-fill.svg" alt=""/>
+        </a>
+      <% else %>
+        <a href="<%= toggle_like_url(post) %>">
+          <img src="/image/heart.svg" alt=""/>
+        </a>
+      <% end %>
+    <% end %>
+    <%= post.likes.count %>
+  </div>
+  <div>
+    <img src="/image/calendar-check.svg" alt=""/>
+    <%= post.created_at.strftime("%H:%M %d-%m-%Y") %>
+  </div>
+</div>
