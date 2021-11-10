@@ -113,3 +113,9 @@ img {
   @extend .btn-outline-primary;
 }
 
+.submit-button {
+  @extend .btn;
+  @extend .btn-outline-primary;
+  @extend .mt-2;
+}
+

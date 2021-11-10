@@ -7,9 +7,12 @@
     <%= f.input :first_name, required: false %>
     <%= f.input :last_name, required: false %>
     <%= f.input :sex, required: false, as: :radio_buttons,
-                collection: [%w[1 female], %w[2 male]], label_method: :second, value_method: :first %>
+                collection: [%w[1 female], %w[2 male]], label_method: :second, value_method: :first,
+                wrapper_html: { style: "display: flex; flex-direction: column;" } %>
+
     <%= f.input :birthday, required: false, default: nil %>
-    <%= f.input :avatar, required: false %>
+    <%= f.input :avatar, required: false,
+                wrapper_html: { class: "my-2" }%>
   </div>
 
   <div class="form-inputs">
@@ -27,7 +30,7 @@
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
+    <%= f.button :submit, "Sign up", class: "submit-button" %>
   </div>
 <% end %>
 
