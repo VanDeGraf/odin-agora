@@ -5,7 +5,7 @@ class Post < ApplicationRecord
                           join_table: 'likes',
                           foreign_key: 'post_id'
   has_many :comments, dependent: :destroy
-
+  has_one_attached :picture
   # @param user [User]
   def liked?(user)
     like_ids.include?(user.id)

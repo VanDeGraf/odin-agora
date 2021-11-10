@@ -10,8 +10,8 @@ class PostsController < ApplicationController
   end
 
   def create
-    permitted = params.required(:post).permit(:title, :body)
-    @post = current_user.posts.create(title: permitted[:title], body: permitted[:body])
+    permitted = params.required(:post).permit(:title, :body, :picture)
+    @post = current_user.posts.create(title: permitted[:title], body: permitted[:body], picture: permitted[:picture])
     flash[:notice] = 'Successfully post create'
     redirect_to @post
   end

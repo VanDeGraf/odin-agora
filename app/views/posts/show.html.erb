@@ -1,5 +1,6 @@
 <h1>Post</h1>
 title: <%= @post.title %><br>
+picture: <%= image_tag @post.picture, style: "max-width: 200px;height: auto;" if @post.picture.attached? %><br>
 body: <%= @post.body %><br>
 author email: <%= @post.author.email %>, <%= link_to 'profile', user_path(@post.author) %><br>
 created_at: <%= @post.created_at %><br>
