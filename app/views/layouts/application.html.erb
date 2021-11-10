@@ -20,7 +20,9 @@
         <%= msg %>
       </div>
     <% end %>
-    <%= yield %>
+    <div class="container my-3">
+      <%= yield %>
+    </div>
   </div>
 <% else %>
   <% flash.each do |type, msg| %>

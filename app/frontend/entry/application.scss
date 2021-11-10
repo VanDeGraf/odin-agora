@@ -1,1 +1,23 @@
 @import "~bootstrap";
+
+/* Resize images */
+img {
+  width: 100%;
+  height: auto;
+}
+
+.friendlist-button {
+  @extend .list-group-item;
+  @extend .list-group-item-action;
+  @extend .d-flex;
+  @extend .align-items-center;
+  @extend .justify-content-center;
+  @extend .rounded;
+  width: 100px;
+}
+
+.friendlist-button span {
+  width: min-content;
+}
+
+

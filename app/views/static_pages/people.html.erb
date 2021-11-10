@@ -1,18 +1,10 @@
-<h1>People</h1>
-<% @people.each do |user| %>
-  <div class="container">
-    <%= user.id %>,
-    <%= link_to "profile", user_path(user) %>,
-    <% if current_user.friendship_status(user) == :friend %>
-      <%= link_to "delete friend", delete_friend_path(user) %>
-    <% elsif current_user.friendship_status(user) == :invited %>
-      <%= link_to "cancel friend invite", cancel_friend_invite_path(user) %>
-    <% elsif current_user.friendship_status(user) == :requested %>
-      <%= link_to "accept", accept_friend_request_path(user) %>\
-      <%= link_to "decline", decline_friend_request_path(user) %> friend request
-    <% else %>
-      <%= link_to "invite friend", invite_friend_path(user) %>
-    <% end %>
-    <br>
+<% unless @people.empty? %>
+  <div class="container bg-light rounded shadow-sm py-2">
+    <h2>People</h2>
+    <div class="list-group">
+      <% @people.each do |user| %>
+        <%= render "users/friendlist_item", friend: user %>
+      <% end %>
+    </div>
   </div>
 <% end %>
