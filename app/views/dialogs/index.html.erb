@@ -1,7 +1,10 @@
-<h1>Dialogs</h1>
-<% @interlocutors.each do |user| %>
-  <div class="container">
-    UserID: <%= user.id %><br>
-    <%= link_to 'chat', dialog_path(user.id) %><br><br>
+<% unless @interlocutors.empty? %>
+  <div class="container bg-light rounded shadow-sm py-2">
+    <h2>Dialogs</h2>
+    <div class="list-group">
+      <% @interlocutors.each do |user| %>
+        <%= render "users/friendlist_item", friend: user, hide_buttons: true, url: dialog_url(user) %>
+      <% end %>
+    </div>
   </div>
 <% end %>

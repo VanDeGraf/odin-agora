@@ -1,24 +1,29 @@
-<h1>Dialog with UserID:<%= @interlocutor.id %></h1>
+<h2>Dialog with <%= @interlocutor.representative_name %></h2>
 <% @messages.each do |m| %>
-  <div class="container p-1 border border-secondary">
-    <% if m.sender_id == current_user.id %>
-      <h6>You</h6>
-    <% else %>
-      <h6>UserID:<%= @interlocutor.id %></h6>
-    <% end %>
+  <div class="container bg-light rounded shadow-sm p-1 my-3">
+    <h5>
+      <% if m.sender_id == current_user.id %>
+        You
+      <% else %>
+        <%= @interlocutor.representative_name %>
+      <% end %>
+    </h5>
     <p><%= m.body %></p>
-    <small><%= m.created_at %></small>
+    <div class="text-secondary mt-1" style="font-size: 10px; font-weight: bold;">
+      <%= m.created_at.strftime("%H:%M %d-%m-%Y") %>
+    </div>
   </div>
 <% end %>
-<div class="container">
+<div class="container bg-light rounded shadow-sm py-2 mt-3" style="margin-bottom: 5rem">
   <%= simple_form_for @message, url: create_message_path(@interlocutor) do |f| %>
     <div class="form-inputs">
       <%= f.input :body,
                   required: true,
-                  as: :text %>
+                  as: :text,
+                  label: false %>
     </div>
     <div class="form-actions">
-      <%= f.button :submit, "Send" %>
+      <%= f.button :submit, "Send", class: "btn btn-outline-primary mt-2" %>
     </div>
   <% end %>
 </div>
