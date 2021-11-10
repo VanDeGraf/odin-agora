@@ -12,9 +12,7 @@
 
 <body>
 <% if user_signed_in? %>
-  <div>
-    <%= render 'static_pages/menu' %>
-  </div>
+  <%= render 'static_pages/menu' %>
   <div>
     <% flash.each do |type, msg| %>
       <% type = type == 'alert' ? 'warning' : 'success' %>

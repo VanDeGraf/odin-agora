@@ -1,4 +1,6 @@
 <h1>Profile <%= @user.representative_name %></h1>
+<%= link_to "Create Post", new_post_path %><br>
+<%= link_to "Logout", destroy_user_session_path, method: :delete %><br>
 avatar: <%= image_tag @user.avatar, style: "max-width: 200px;height: auto;" if @user.avatar.attached? %><br>
 email: <%= @user.email %><br>
 birthday: <%= @user.birthday %><br>
