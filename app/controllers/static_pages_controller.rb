@@ -11,14 +11,15 @@ class StaticPagesController < ApplicationController
                    INNER JOIN friends f2 ON
                   (f2.friend_id = u.id OR f2.other_friend_id = u.id)
                   AND (f2.friend_id = #{current_user.id} OR f2.other_friend_id = #{current_user.id})
-      )
+      ) AND users.id <> #{current_user.id}
     SQL
     @people = User.joins(join_statement).where(where_statement).group('id').order('COUNT(id)')
   end
 
   def feed
     posts = Post.distinct.includes(:author).joins(friends_children_join('posts')).order('created_at DESC')
-    comments = Comment.distinct.includes(:author, :post).joins(friends_children_join('comments')).order('created_at DESC')
+    comments = Comment.distinct.includes(:author, :post)
+                      .joins(friends_children_join('comments')).order('created_at DESC')
     # @type [Array<Post,Comment>]
     @feed = (posts + comments).sort_by!(&:created_at).reverse
   end
