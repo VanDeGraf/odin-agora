@@ -1,0 +1,9 @@
+<div class="user-container">
+  <a href="<%= user_url(user) %>" class="circle">
+    <%= image_tag user.avatar if user.avatar.attached? %>
+  </a>
+  <a href="<%= user_url(user) %>" class="mx-3">
+    <h5><%= user.representative_name %></h5>
+    <%= user.email %>
+  </a>
+</div>

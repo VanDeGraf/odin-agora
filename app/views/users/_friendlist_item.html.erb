@@ -1,5 +1,6 @@
 <div class="d-flex">
-  <a href="<%= user_url(friend) %>" class="list-group-item list-group-item-action d-flex">
+  <% href = defined?(url) ? url : user_url(friend) %>
+  <a href="<%= href %>" class="list-group-item list-group-item-action d-flex">
     <div class="border border-secondary rounded-circle overflow-hidden" style="width: 4rem; height: 4rem;">
       <%= image_tag friend.avatar if friend.avatar.attached? %>
     </div>
@@ -8,30 +9,32 @@
       <%= friend.email %>
     </div>
   </a>
-  <% if friend.id == current_user.id %>
-    <a href="<%= delete_friend_url(@user) %>" class="friendlist-button bg-danger bg-opacity-25">
-      <span>Delete</span>
-    </a>
-  <% else %>
-    <% if current_user.friendship_status(friend) == :friend %>
-      <a href="<%= delete_friend_url(friend) %>" class="friendlist-button bg-danger bg-opacity-25">
+  <% if !defined?(hide_buttons) || !hide_buttons %>
+    <% if friend.id == current_user.id %>
+      <a href="<%= delete_friend_url(@user) %>" class="friendlist-button bg-danger bg-opacity-25">
         <span>Delete</span>
       </a>
-    <% elsif current_user.friendship_status(friend) == :invited %>
-      <a href="<%= cancel_friend_invite_url(friend) %>" class="friendlist-button bg-warning bg-opacity-25">
-        <span>cancel invite</span>
-      </a>
-    <% elsif current_user.friendship_status(friend) == :requested %>
-      <a href="<%= accept_friend_request_url(friend) %>" class="friendlist-button bg-success bg-opacity-25">
-        <span>accept request</span>
-      </a>
-      <a href="<%= decline_friend_request_url(friend) %>" class="friendlist-button bg-warning bg-opacity-25">
-        <span>decline request</span>
-      </a>
     <% else %>
-      <a href="<%= invite_friend_url(friend) %>" class="friendlist-button bg-primary bg-opacity-25">
-        <span>send invite</span>
-      </a>
+      <% if current_user.friendship_status(friend) == :friend %>
+        <a href="<%= delete_friend_url(friend) %>" class="friendlist-button bg-danger bg-opacity-25">
+          <span>Delete</span>
+        </a>
+      <% elsif current_user.friendship_status(friend) == :invited %>
+        <a href="<%= cancel_friend_invite_url(friend) %>" class="friendlist-button bg-warning bg-opacity-25">
+          <span>cancel invite</span>
+        </a>
+      <% elsif current_user.friendship_status(friend) == :requested %>
+        <a href="<%= accept_friend_request_url(friend) %>" class="friendlist-button bg-success bg-opacity-25">
+          <span>accept request</span>
+        </a>
+        <a href="<%= decline_friend_request_url(friend) %>" class="friendlist-button bg-warning bg-opacity-25">
+          <span>decline request</span>
+        </a>
+      <% else %>
+        <a href="<%= invite_friend_url(friend) %>" class="friendlist-button bg-primary bg-opacity-25">
+          <span>send invite</span>
+        </a>
+      <% end %>
     <% end %>
   <% end %>
 </div>

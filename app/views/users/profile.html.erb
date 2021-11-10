@@ -1,35 +1,65 @@
-<h1>Profile <%= @user.representative_name %></h1>
-<%= link_to "Create Post", new_post_path %><br>
-<%= link_to "Logout", destroy_user_session_path, method: :delete %><br>
-avatar: <%= image_tag @user.avatar, style: "max-width: 200px;height: auto;" if @user.avatar.attached? %><br>
-email: <%= @user.email %><br>
-birthday: <%= @user.birthday %><br>
-first_name: <%= @user.first_name %><br>
-last_name: <%= @user.last_name %><br>
-sex: <%= @user.sex_name %><br>
-last_sign_in_at: <%= @user.last_sign_in_at %><br>
-<%= link_to "friends", friends_path(@user) %><br>
-<% if current_user.id == @user.id %>
-  <%= link_to "edit profile", edit_user_registration_path %><br>
-<% else %>
-  <% if @user.friendship_status(current_user) == :friend %>
-    <%= link_to "delete friend", delete_friend_path(@user) %><br>
-  <% elsif @user.friendship_status(current_user) == :invited %>
-    <%= link_to "accept", accept_friend_request_path(@user) %>\
-    <%= link_to "decline", decline_friend_request_path(@user) %> friend request<br>
-  <% elsif @user.friendship_status(current_user) == :requested %>
-    <%= link_to "cancel friend invite", cancel_friend_invite_path(@user) %><br>
-  <% else %>
-    <%= link_to "invite friend", invite_friend_path(@user) %><br>
-  <% end %>
-  <%= link_to "send message", dialog_path(@user) %><br>
-<% end %>
-<h3>Posts:</h3>
-<% @user.posts.sort_by(&:created_at).reverse.each do |p| %>
-  <div class="container">
-    title: <%= p.title %><br>
-    body: <%= p.body %><br>
-    created_at: <%= p.created_at %><br>
-    <%= link_to "show post", post_path(p) %><br>
+<div class="profile-container mb-3">
+  <h2>Profile <%= @user.representative_name %></h2>
+  <div class="d-flex">
+    <div class="profile-container-left">
+      <div class="profile-container-buttons">
+        <%= link_to "Friend list", friends_path %>
+        <% if current_user.id == @user.id %>
+          <%= link_to "Create Post", new_post_path %>
+          <%= link_to "Edit profile", edit_user_registration_path %>
+        <% else %>
+          <% if @user.friendship_status(current_user) == :friend %>
+            <%= link_to "Delete friend", delete_friend_path(@user) %>
+          <% elsif @user.friendship_status(current_user) == :invited %>
+            <%= link_to "Accept friend", accept_friend_request_path(@user) %>
+            <%= link_to "Decline friend", decline_friend_request_path(@user) %> friend request
+          <% elsif @user.friendship_status(current_user) == :requested %>
+            <%= link_to "Cancel friend invite", cancel_friend_invite_path(@user) %>
+          <% else %>
+            <%= link_to "Invite friend", invite_friend_path(@user) %>
+          <% end %>
+          <%= link_to "Send message", dialog_path(@user) %>
+        <% end %>
+        <% if current_user.id == @user.id %>
+          <%= link_to "Logout", destroy_user_session_path, method: :delete %>
+        <% end %>
+      </div>
+      <div class="circle">
+        <%= image_tag @user.avatar if @user.avatar.attached? %>
+      </div>
+    </div>
+    <div>
+      <table class="table">
+        <tbody>
+        <tr>
+          <td>First name</td>
+          <td><%= @user.first_name %></td>
+        </tr>
+        <tr>
+          <td>Last name</td>
+          <td><%= @user.last_name %></td>
+        </tr>
+        <tr>
+          <td>Sex</td>
+          <td><%= @user.sex_name %></td>
+        </tr>
+        <tr>
+          <td>E-mail</td>
+          <td><%= @user.email %></td>
+        </tr>
+        <tr>
+          <td>Birthday</td>
+          <td><%= @user.birthday %></td>
+        </tr>
+        <tr>
+          <td>Last sign in</td>
+          <td><%= @user.last_sign_in_at.strftime("%H:%M %d-%m-%Y") unless @user.last_sign_in_at.nil? %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>
+<% @user.posts.sort_by(&:created_at).reverse.each do |p| %>
+  <%= render "posts/post", post: p, show_author: false %>
 <% end %>
