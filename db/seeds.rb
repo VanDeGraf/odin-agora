@@ -8,17 +8,18 @@ puts "\tCreate users..."
 user_ids = []
 ActiveRecord::Base.transaction do
   user_ids = 100.times.map do
-    User.create(
+    u = User.create(
       first_name: Faker::Name.first_name,
       last_name: Faker::Name.last_name,
       sex: Faker::Number.between(from: 0, to: 2),
       birthday: Faker::Date.birthday(min_age: 18, max_age: 65),
-      avatar_url: Faker::Avatar.image,
       email: Faker::Internet.safe_email,
       password: password,
       password_confirmation: password,
       confirmed_at: @creation_date_stub
-    ).id
+    )
+    u.attach_avatar_from_url(Faker::Avatar.image)
+    u.id
   end
 end
 

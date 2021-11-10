@@ -1,5 +1,5 @@
 <h1>Profile <%= @user.representative_name %></h1>
-avatar_url: <%= @user.avatar_url %><br>
+avatar: <%= image_tag @user.avatar, style: "max-width: 200px;height: auto;" if @user.avatar.attached? %><br>
 email: <%= @user.email %><br>
 birthday: <%= @user.birthday %><br>
 first_name: <%= @user.first_name %><br>

@@ -5,6 +5,7 @@ class User < ApplicationRecord
   before_destroy do
     destroy_all_friendship
   end
+  has_one_attached :avatar
   has_many :posts, class_name: 'Post', foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
   has_and_belongs_to_many :liked,
                           class_name: 'Post',
@@ -160,9 +161,17 @@ class User < ApplicationRecord
                    0
                  end
       unless auth.extra.raw_info.is_avatar_empty
-        user.avatar_url = "https://avatars.yandex.net/get-yapic/#{auth.extra.raw_info.default_avatar_id}/islands-middle"
+        avatar_url = "https://avatars.yandex.net/get-yapic/#{auth.extra.raw_info.default_avatar_id}/islands-middle"
+        user.attach_avatar_from_url(avatar_url)
       end
     end
+  end
+
+  def attach_avatar_from_url(url)
+    file = URI.open(url)
+    avatar.attach(io: file,
+                  filename: "temp.#{file.content_type_parse.first.split('/').last}",
+                  content_type: file.content_type_parse.first)
   end
 
   private
