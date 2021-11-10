@@ -51,7 +51,7 @@ class User < ApplicationRecord
         (messages.recipient_id = #{id} AND messages.sender_id = #{interlocutor_id})
       OR (messages.sender_id = #{id} AND messages.recipient_id = #{interlocutor_id})
     SQL
-    Message.distinct.joins(join_statement).unscope(:where).where(where_statement).order('messages.created_at')
+    Message.distinct.joins(join_statement).unscope(:where).where(where_statement).sort_by(&:created_at).reverse
   end
 
   # called other users to your friend list
