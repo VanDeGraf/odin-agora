@@ -5,7 +5,6 @@ class CreateUsers < ActiveRecord::Migration[6.1]
       t.string :last_name, null: false, default: ''
       t.integer :sex
       t.date :birthday
-      t.string :avatar_url
 
       t.timestamps
     end
