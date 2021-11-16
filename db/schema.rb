@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_10_045632) do
+ActiveRecord::Schema.define(version: 2021_11_16_101725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,16 +53,16 @@ ActiveRecord::Schema.define(version: 2021_11_10_045632) do
     t.index ["post_id"], name: "index_comments_on_post_id"
   end
 
-  create_table "friends", id: false, force: :cascade do |t|
+  create_table "friendships", force: :cascade do |t|
     t.boolean "invite", null: false
-    t.integer "friend_id", null: false
-    t.integer "other_friend_id", null: false
+    t.bigint "friend_id", null: false
+    t.bigint "other_friend_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["friend_id", "other_friend_id"], name: "index_friends_on_friend_id_and_other_friend_id", unique: true
-    t.index ["friend_id"], name: "index_friends_on_friend_id"
-    t.index ["invite"], name: "index_friends_on_invite"
-    t.index ["other_friend_id"], name: "index_friends_on_other_friend_id"
+    t.index ["friend_id", "other_friend_id"], name: "index_friendships_on_friend_id_and_other_friend_id", unique: true
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["invite"], name: "index_friendships_on_invite"
+    t.index ["other_friend_id"], name: "index_friendships_on_other_friend_id"
   end
 
   create_table "likes", id: false, force: :cascade do |t|

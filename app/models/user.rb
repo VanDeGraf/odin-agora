@@ -4,9 +4,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, :confirmable, :trackable
-  before_destroy do
-    destroy_all_friendship
-  end
+
+  has_many :friendships,
+           ->(user) { unscope(:where).where('friend_id = ? OR other_friend_id = ?', user.id, user.id) },
+           dependent: :destroy
   has_one_attached :avatar
   has_many :posts, class_name: 'Post', foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
   has_and_belongs_to_many :liked,
@@ -14,20 +15,49 @@ class User < ApplicationRecord
                           join_table: 'likes',
                           foreign_key: 'user_id'
   has_many :comments, class_name: 'Comment', foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
-  has_many :friends,
-           lambda { |user|
-             join_statement = <<~SQL
-               INNER JOIN friends f ON
-                      (f.friend_id = id OR f.other_friend_id = id)
-                  AND (f.friend_id = #{user.id} OR f.other_friend_id = #{user.id})
-                  AND f.invite = false
-             SQL
-             User.joins(join_statement).unscope(:where).where.not(id: user.id)
-           }, class_name: 'User'
   has_many :sent_messages, class_name: 'Message', foreign_key: :sender_id,
-                           inverse_of: :sender, dependent: :destroy
+           inverse_of: :sender, dependent: :destroy
   has_many :received_messages, class_name: 'Message', foreign_key: :recipient_id,
-                               inverse_of: :recipient, dependent: :destroy
+           inverse_of: :recipient, dependent: :destroy
+
+  def grouped_friendships(invite: false)
+    groups = {
+      friend: [],
+      invited: [],
+      requested: []
+    }
+    if invite
+      friendships.find_each do |friendship|
+        groups[friendship.friendship_status(self)] << friendship
+      end
+    else
+      friendships.where(invite: false).find_each do |friendship|
+        groups[:friend] << friendship
+      end
+    end
+    groups
+  end
+
+  def friendship_status(user)
+    status = nil
+    friendships.find_each do |friendship|
+      unless (status = friendship.friendship_status(user)).nil?
+        return case status
+               when :invited
+                 :requested
+               when :requested
+                 :invited
+               else
+                 status
+               end
+      end
+    end
+    status
+  end
+
+  def friend_request_count
+    Friendship.where(other_friend_id: id, invite: true).count
+  end
 
   # @return [ActiveRecord::Relation]
   def interlocutors
@@ -54,76 +84,6 @@ class User < ApplicationRecord
       OR (messages.sender_id = #{id} AND messages.recipient_id = #{interlocutor_id})
     SQL
     Message.distinct.joins(join_statement).unscope(:where).where(where_statement).sort_by(&:created_at)
-  end
-
-  # called other users to your friend list
-  has_many :friend_invites,
-           lambda { |user|
-             join_statement = <<~SQL
-               INNER JOIN friends f ON
-                      f.friend_id = #{user.id}
-                  AND f.other_friend_id = id
-                  AND f.invite = true
-             SQL
-             User.joins(join_statement).unscope(:where)
-           }, class_name: 'User'
-  # other users called you to their friend lists
-  has_many :friend_requests,
-           lambda { |user|
-             join_statement = <<~SQL
-               INNER JOIN friends f ON
-                      f.other_friend_id = #{user.id}
-                  AND f.friend_id = id
-                  AND f.invite = true
-             SQL
-             User.joins(join_statement).unscope(:where)
-           }, class_name: 'User'
-
-  # @param friend [User, Integer]
-  def delete_friend(friend)
-    sql_with_friend(friend) do |friend_id|
-      <<~SQL
-        DELETE
-        FROM friends
-        WHERE (friend_id = #{id} AND other_friend_id = #{friend_id})
-           OR (friend_id = #{friend_id} AND other_friend_id = #{id})
-      SQL
-    end
-  end
-
-  # @param friend [User]
-  def accept_friend_request(friend)
-    sql_with_friend(friend) do |friend_id|
-      <<~SQL
-        UPDATE friends
-        SET invite = false
-        WHERE friend_id = #{friend_id} AND other_friend_id = #{id}
-      SQL
-    end
-  end
-
-  alias decline_friend_request delete_friend
-
-  # @param friend [User]
-  def invite_friend(friend)
-    cur_date = DateTime.now.new_offset(0).to_formatted_s(:db)
-    sql_with_friend(friend) do |friend_id|
-      <<~SQL
-        INSERT INTO friends
-        VALUES (true, #{id}, #{friend_id}, "#{cur_date}", "#{cur_date}")
-      SQL
-    end
-  end
-
-  alias cancel_friend_invite delete_friend
-
-  # @param user [User]
-  def friendship_status(user)
-    return :friend if friend_ids.include?(user.id)
-    return :invited if friend_invite_ids.include?(user.id)
-    return :requested if friend_request_ids.include?(user.id)
-
-    nil
   end
 
   def sex_name
@@ -174,29 +134,5 @@ class User < ApplicationRecord
     avatar.attach(io: file,
                   filename: "temp.#{file.content_type_parse.first.split('/').last}",
                   content_type: file.content_type_parse.first)
-  end
-
-  private
-
-  # @param friend [User, Integer]
-  # @yieldparam friend_id [Integer]
-  def sql_with_friend(friend)
-    return false unless friend.is_a?(User) || friend.is_a?(Integer)
-
-    friend_id = friend.is_a?(User) ? friend.id : friend
-    return if !id.nil? && friend_id == id
-
-    sql = yield friend_id
-    # @type [ActiveRecord::Result]
-    result = ActiveRecord::Base.connection.exec_query(sql)
-    result.rows == 1
-  end
-
-  def destroy_all_friendship
-    sql = <<~SQL
-      DELETE FROM friends
-      WHERE friend_id = #{id} OR other_friend_id = #{id}
-    SQL
-    ActiveRecord::Base.connection.exec_query(sql)
   end
 end

@@ -1,31 +1,31 @@
-<% unless @user.friends.empty? %>
+<% unless @friendships[:friend].empty? %>
   <div class="container bg-light rounded shadow-sm py-2">
     <h2><%= (@user.id == current_user.id ? 'My' : @user.representative_name) %> Friends</h2>
     <div class="list-group">
-      <% @user.friends.find_each do |friend| %>
-        <%= render "users/friendlist_item", friend: friend %>
+      <% @friendships[:friend].each do |friendship| %>
+        <%= render "users/friendlist_item", friend: friendship.towards_user(@user) %>
       <% end %>
     </div>
   </div>
 <% end %>
 
 <% if @user.id == current_user.id %>
-  <% unless @user.friend_requests.empty? %>
+  <% unless @friendships[:requested].empty? %>
     <div class="container bg-light rounded shadow-sm py-2 mt-3">
       <h2>Requests</h2>
       <div class="list-group">
-        <% @user.friend_requests.find_each do |friend| %>
-          <%= render "users/friendlist_item", friend: friend %>
+        <% @friendships[:requested].each do |friendship| %>
+          <%= render "users/friendlist_item", friend: friendship.towards_user(@user) %>
         <% end %>
       </div>
     </div>
   <% end %>
-  <% unless @user.friend_invites.empty? %>
+  <% unless @friendships[:invited].empty? %>
     <div class="container bg-light rounded shadow-sm py-2 mt-3">
       <h2>My Invites</h2>
       <div class="list-group">
-        <% @user.friend_invites.find_each do |friend| %>
-          <%= render "users/friendlist_item", friend: friend %>
+        <% @friendships[:invited].each do |friendship| %>
+          <%= render "users/friendlist_item", friend: friendship.towards_user(@user) %>
         <% end %>
       </div>
     </div>

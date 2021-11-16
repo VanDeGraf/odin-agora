@@ -56,8 +56,8 @@ if OPTIONS[:user][:create]
         updated_at: OPTIONS[:stub][:datetime]
       }
     end
-    friendships = table_inserts('friends', data, 'friend_id')
-    info_stage_item "#{friendships.length} friendships created"
+    friendships = table_inserts('friendships', data)
+    info_stage_item "#{friendships[:id].length} friendships created"
   end
 end
 

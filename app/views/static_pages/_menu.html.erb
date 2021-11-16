@@ -15,7 +15,7 @@
         </li>
         <li class="nav-item">
           <%
-            friend_requests = current_user.friend_request_ids.count
+            friend_requests = current_user.friend_request_count
             text = "Friends" + (friend_requests == 0 ? '' : " (+#{friend_requests})")
           %>
           <%= link_to text, friends_path(current_user), class: "nav-link" %>

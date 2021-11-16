@@ -12,7 +12,7 @@
             <%= link_to "Delete friend", delete_friend_path(@user) %>
           <% elsif @user.friendship_status(current_user) == :invited %>
             <%= link_to "Accept friend", accept_friend_request_path(@user) %>
-            <%= link_to "Decline friend", decline_friend_request_path(@user) %> friend request
+            <%= link_to "Decline friend", decline_friend_request_path(@user) %>
           <% elsif @user.friendship_status(current_user) == :requested %>
             <%= link_to "Cancel friend invite", cancel_friend_invite_path(@user) %>
           <% else %>

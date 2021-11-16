@@ -1,19 +1,19 @@
 class StaticPagesController < ApplicationController
   def people
     join_statement = <<~SQL
-         LEFT JOIN friends f ON
+         LEFT JOIN friendships f ON
       f.friend_id = users.id OR f.other_friend_id = users.id
     SQL
     where_statement = <<~SQL
       users.id NOT IN (
           SELECT u.id
           FROM users as u
-                   INNER JOIN friends f2 ON
+                   INNER JOIN friendships f2 ON
                   (f2.friend_id = u.id OR f2.other_friend_id = u.id)
                   AND (f2.friend_id = #{current_user.id} OR f2.other_friend_id = #{current_user.id})
       ) AND users.id <> #{current_user.id}
     SQL
-    @people = User.joins(join_statement).where(where_statement).group('id').order('COUNT(id)')
+    @people = User.joins(join_statement).where(where_statement).group('id').order('COUNT(users.id)')
   end
 
   def feed
@@ -32,7 +32,7 @@ class StaticPagesController < ApplicationController
     <<~SQL
       INNER JOIN users f ON
             #{table}.author_id = f.id AND f.id <> #{current_user.id}
-      INNER JOIN friends f_join ON
+      INNER JOIN friendships f_join ON
             (f_join.friend_id = f.id OR f_join.other_friend_id = f.id)
         AND (f_join.friend_id = #{current_user.id} OR f_join.other_friend_id = #{current_user.id})
     SQL
