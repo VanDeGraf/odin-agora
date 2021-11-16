@@ -170,7 +170,7 @@ class User < ApplicationRecord
   end
 
   def attach_avatar_from_url(url)
-    file = open(url)
+    file = URI.open(url)
     avatar.attach(io: file,
                   filename: "temp.#{file.content_type_parse.first.split('/').last}",
                   content_type: file.content_type_parse.first)
