@@ -19,11 +19,9 @@ shot._"
 
 #### Not implemented features yet
 
-* Tests
 * Omniauth Facebook provider
 * Polymorphic Post model (with text or picture)
 * ActiveStorage requests optimize
-* Seed config
 
 ## Requirements
 
@@ -40,6 +38,7 @@ shot._"
     * rubocop
     * guard
     * letter_opener
+    * factory_bot
 * npm:
     * bootstrap >= '5'
 
@@ -88,7 +87,16 @@ All secure configs in created by figaro `config/application.yml`:
 
 ## Tests
 
-TODO
+Run test suites with `rails test`
+
+Implemented:
+
+* Model tests
+
+Not implemented:
+
+* Integration tests(View, Mailer)
+* Controller tests
 
 ## Services
 
