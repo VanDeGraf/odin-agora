@@ -39,6 +39,8 @@ class User < ApplicationRecord
   end
 
   def friendship_status(user)
+    return nil if self == user
+
     status = nil
     friendships.find_each do |friendship|
       unless (status = friendship.friendship_status(user)).nil?
