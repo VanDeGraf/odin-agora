@@ -10,30 +10,26 @@ class UserTest < ActiveSupport::TestCase
     user.save
     assert_not_nil(user.id, user.errors.full_messages)
   end
-  test 'posts association exists' do
-    post_count = 3
-    user = FactoryBot.build(:user) do |u|
-      post_count.times { u.posts.build(FactoryBot.attributes_for(:post)) }
-    end
+  test 'posts association' do
+    user = FactoryBot.create(:user)
+    post = FactoryBot.create(:post, author_id: user.id)
+    user.reload(lock: true)
+
     assert_kind_of(ActiveRecord::Associations::CollectionProxy, user.posts)
-    assert_equal(post_count, user.posts.length)
+    assert_equal(user.posts.length, 1)
+    assert_kind_of(Post, user.posts.first)
+    assert_equal(user.posts.first.id, post.id)
   end
+  test 'liked association' do
+    user = FactoryBot.create(:user)
+    post = FactoryBot.create(:post_with_author)
 
-  test 'posts association creates' do
-    user = FactoryBot.build(:user) do |u|
-      u.posts.build(FactoryBot.attributes_for(:post))
-    end
-    user.save
-    assert_not_nil(user.posts.first.id, user.errors.full_messages)
-  end
+    assert_kind_of(ActiveRecord::Associations::CollectionProxy, user.liked)
 
-  test 'likes association' do
-    user_creator = FactoryBot.create(:user)
-    user_reader = FactoryBot.create(:user)
-    post = user_creator.posts.create(FactoryBot.attributes_for(:post))
-    post.likes << user_reader
-    assert_equal(1, post.likes.length)
-    assert Post.find(post.id).likes.include?(user_reader)
+    user.liked << post
+    assert_equal(1, user.liked.length)
+    assert_kind_of(Post, user.liked.first)
+    assert user.liked.include?(post)
   end
 
   test 'comments association' do
