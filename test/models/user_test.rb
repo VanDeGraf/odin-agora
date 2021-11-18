@@ -10,7 +10,6 @@ class UserTest < ActiveSupport::TestCase
     user.save
     assert_not_nil(user.id, user.errors.full_messages)
   end
-  # ---------- Associations ----------------------------
   test 'posts association exists' do
     post_count = 3
     user = FactoryBot.build(:user) do |u|
